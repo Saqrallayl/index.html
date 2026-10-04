@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+tools/_*.mjs
+tools/scene.bin
+tools/preview/
