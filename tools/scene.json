@@ -1,12 +1,12 @@
 {
- "ms": 137,
- "meshes": 103,
- "tris": 20868,
- "reach": 706.8599999999999,
- "floorArea": 724.5,
- "stuck": 29,
- "colliders": 185,
+ "ms": 124,
+ "meshes": 361,
+ "tris": 25316,
+ "reach": 666.9,
+ "floorArea": 691.8299999999998,
+ "stuck": 30,
+ "colliders": 186,
  "doors": 11,
  "materials": 43,
- "furniture": 63
+ "furniture": 91
 }

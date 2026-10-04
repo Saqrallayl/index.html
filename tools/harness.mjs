@@ -3,6 +3,7 @@
 // merged scene to a binary file for the offline preview renderer.
 import fs from 'node:fs';
 import path from 'node:path';
+const require$write = (p, d) => fs.writeFileSync(p, d);
 
 /* ---------------------------------------------------------- DOM shims --- */
 function ctx2d() {
@@ -72,7 +73,7 @@ const scene = new THREE.Scene();
 const M = materials();
 const t0 = Date.now();
 const arch = buildArchitecture(PLAN, M, scene);
-const furn = buildFurniture(PLAN, M, scene);
+const furn = buildFurniture(PLAN, M, scene, { perItem: true });
 const ms = Date.now() - t0;
 
 let meshes = 0, tris = 0;
@@ -93,6 +94,33 @@ console.log(`built in ${ms} ms`);
 console.log(`  meshes ${meshes}   triangles ${Math.round(tris)}`);
 console.log(`  arch colliders ${arch.colliders.length}   furniture colliders ${furn.colliders.length}   doors ${arch.doors.length}`);
 console.log(`  point lights ${furn.lights.length}   flames ${furn.flames.length}`);
+
+// furniture sanity: every built group must sit inside its footprint (with a
+// little slack for counters, headboards, stools) and never over the stairwell
+const voids = PLAN.rooms.filter(r => r.kind === 'void').map(r => r.rect);
+let overVoid = 0, outOfRect = 0;
+const TOL = 0.35;
+for (const b of furn.boxes) {
+  if (!b.box) continue;
+  const [x0, z0, x1, z1] = b.rect;
+  const LOOSE = ['island', 'counter_run', 'dining_table', 'outdoor_table', 'bed_queen', 'bed_king',
+    'ceiling_light', 'pendant', 'tub_freestanding', 'fireplace'];
+  const slack = LOOSE.includes(b.kind) ? 2.6 : 0.55;
+  const bad = [b.box.min.x < x0 - slack, b.box.max.x > x1 + slack, b.box.min.z < z0 - slack, b.box.max.z > z1 + slack];
+  if (bad.some(Boolean)) {
+    outOfRect++;
+    console.log(`  ! ${b.kind} rect[${x0},${z0},${x1},${z1}] built [${b.box.min.x.toFixed(1)},${b.box.min.z.toFixed(1)} .. ${b.box.max.x.toFixed(1)},${b.box.max.z.toFixed(1)}]`);
+  }
+  for (const v of voids) {
+    const ox = Math.min(b.box.max.x, v[2]) - Math.max(b.box.min.x, v[0]);
+    const oz = Math.min(b.box.max.z, v[3]) - Math.max(b.box.min.z, v[1]);
+    if (ox > 0.25 && oz > 0.25 && b.kind !== 'rug') {
+      overVoid++;
+      console.log(`  ! ${b.kind} rect[${b.rect}] overlaps the void by ${ox.toFixed(1)} x ${oz.toFixed(1)} ft`);
+    }
+  }
+}
+console.log(`  furniture placement: ${outOfRect} outside their footprint, ${overVoid} over the stairwell`);
 
 // walkability: sample the plan on a grid, make sure rooms connect and the
 // player never spawns inside geometry
@@ -257,6 +285,8 @@ const file = path.join(path.dirname(new URL(import.meta.url).pathname), 'scene.b
 fs.writeFileSync(file, Buffer.concat(chunks));
 console.log(`  wrote ${file} (${(fs.statSync(file).size / 1048576).toFixed(1)} MB)`);
 
+const lights = furn.lights.map(L => ({ pos: L.pos, color: L.color, intensity: L.intensity, dist: L.dist }));
+require$write(file.replace('.bin', '.lights.json'), JSON.stringify(lights));
 const report = { ms, meshes, tris: Math.round(tris), reach, floorArea, stuck,
   colliders: arch.colliders.length + furn.colliders.length, doors: arch.doors.length,
   materials: Object.keys(M).length, furniture: PLAN.furniture.length };

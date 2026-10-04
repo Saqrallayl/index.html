@@ -9,7 +9,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:#0d0e10;color:#fff;
   font-family:'DM Sans',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   -webkit-font-smoothing:antialiased}
 #app{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}
-body[data-ready] #app{cursor:none}
+body[data-locked="1"] #app{cursor:none}
 body:not([data-ready]) #app{cursor:progress}
 
 /* ---------------------------------------------------------------- hud --- */

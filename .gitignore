@@ -3,3 +3,5 @@ __pycache__/
 tools/_*.mjs
 tools/scene.bin
 tools/preview/
+tools/_main_shim.mjs
+tools/_*.mjs

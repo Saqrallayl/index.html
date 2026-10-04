@@ -9,29 +9,22 @@ ROOT = os.path.dirname(HERE)
 
 # ------------------------------------------------------------------ -------
 def railings():
-    """glass guards around the stair void / slot."""
+    """glass guards. solid=True keeps the guard active at every height, so the
+    stair balustrade also works while you are below floor level."""
     r = []
-    # spine hall edge of the foyer void
-    r.append(dict(a=[17.40, 19.65], b=[17.40, 24.17], y=0.0))
-    # landing edge over the void
-    r.append(dict(a=[20.90, 19.65], b=[20.90, 21.80], y=0.0))
-    # living room edge along the void + stair slot
-    r.append(dict(a=[17.40, 24.17], b=[24.40, 24.17], y=0.0))
-    # both sides of the stair slot through the living room
-    r.append(dict(a=[20.90, 24.17], b=[20.90, 34.95], y=0.0))
-    r.append(dict(a=[24.40, 24.17], b=[24.40, 34.95], y=0.0))
-    # live edge at the foot of the flight
-    r.append(dict(a=[20.90, 34.95], b=[24.40, 34.95], y=0.0))
+    r.append(dict(a=[17.40, 19.65], b=[17.40, 24.17]))              # spine hall over the foyer void
+    r.append(dict(a=[20.90, 19.65], b=[20.90, 21.80]))              # landing over the void
+    r.append(dict(a=[17.40, 24.17], b=[20.90, 24.17]))              # living room edge over the void
+    r.append(dict(a=[20.90, 34.95], b=[24.40, 34.95]))              # live edge at the foot of the flight
+    r.append(dict(a=[20.90, 21.80], b=[20.90, 34.95], solid=True))  # stair balustrade, west
+    r.append(dict(a=[24.40, 21.80], b=[24.40, 34.95], solid=True))  # stair balustrade, east
     # patio + balcony perimeter guards
-    r.append(dict(a=[20.17, -6.92], b=[20.17, 0.00], y=0.0))
-    r.append(dict(a=[20.17, -6.92], b=[34.00, -6.92], y=0.0))
-    r.append(dict(a=[34.00, -6.92], b=[34.00, 0.00], y=0.0))
-    r.append(dict(a=[13.98, 41.00], b=[13.98, 55.25], y=0.0))
-    r.append(dict(a=[13.98, 55.25], b=[34.00, 55.25], y=0.0))
-    r.append(dict(a=[34.00, 41.00], b=[34.00, 55.25], y=0.0))
-    # down the stair flight
-    r.append(dict(a=[24.40, 21.80], b=[24.40, 34.95], y=0.0, stair=True))
-    r.append(dict(a=[20.90, 21.80], b=[20.90, 34.95], y=0.0, stair=True))
+    r.append(dict(a=[20.17, -6.92], b=[20.17, 0.00]))
+    r.append(dict(a=[20.17, -6.92], b=[34.00, -6.92]))
+    r.append(dict(a=[34.00, -6.92], b=[34.00, 0.00]))
+    r.append(dict(a=[13.98, 41.00], b=[13.98, 55.25]))
+    r.append(dict(a=[13.98, 55.25], b=[34.00, 55.25]))
+    r.append(dict(a=[34.00, 41.00], b=[34.00, 55.25]))
     return r
 
 def columns():

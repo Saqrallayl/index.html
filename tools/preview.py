@@ -62,7 +62,8 @@ def build_tris(meshes):
 
 
 def render(tris, eye, target, w, h, fov=62, ambient=0.56, sky=0.22, clip=0.4,
-           near_skip=True, bg=((0.55, 0.68, 0.82), (0.86, 0.87, 0.84))):
+           near_skip=True, bg=((0.55, 0.68, 0.82), (0.86, 0.87, 0.84)),
+           sunmul=1.0, lights=None, K=120.0):
     ex, ey, ez = eye
     tx, ty, tz = target
     fx, fy, fz = tx - ex, ty - ey, tz - ez
@@ -108,7 +109,20 @@ def render(tris, eye, target, w, h, fov=62, ambient=0.56, sky=0.22, clip=0.4,
         if nrm[0] * (v[0][0] - ex) + nrm[1] * (v[0][1] - ey) + nrm[2] * (v[0][2] - ez) > 0:
             nrm = (-nrm[0], -nrm[1], -nrm[2])
         lam = max(0.0, nrm[0] * SUN[0] + nrm[1] * SUN[1] + nrm[2] * SUN[2])
-        l = ambient + 0.85 * lam
+        l = ambient + 0.85 * lam * sunmul
+        if lights:
+            # point lights: approximate irradiance at the face centre
+            mx = (v[0][0] + v[1][0] + v[2][0]) / 3
+            my = (v[0][1] + v[1][1] + v[2][1]) / 3
+            mz = (v[0][2] + v[1][2] + v[2][2]) / 3
+            for lp in lights:
+                ddx, ddy, ddz = lp['pos'][0] - mx, lp['pos'][1] - my, lp['pos'][2] - mz
+                d2 = ddx * ddx + ddy * ddy + ddz * ddz
+                if d2 > lp['dist'] ** 2:
+                    continue
+                dist = math.sqrt(d2) or 0.001
+                ndl = max(0.0, (nrm[0] * ddx + nrm[1] * ddy + nrm[2] * ddz) / dist)
+                l += (lp['intensity'] * K / d2) * ndl / 6.0
         if props[1] > 0.5 and props[2] > 0.5:
             l = ambient + 0.5 * lam
         r_, g_, b_ = props[0], props[1], props[2]
@@ -132,6 +146,16 @@ def render(tris, eye, target, w, h, fov=62, ambient=0.56, sky=0.22, clip=0.4,
 
 
 VIEWS = [
+    ('19-evening-living', (29.0, 5.6, 38.5), (27, 4.2, 26), 74),
+    ('20-evening-kitchen', (18.6, 5.6, 3.0), (30, 3.6, 12), 74),
+    ('17-stair',        (23.0, 6.4, 20.0), (22.7, 1.0, 30), 74),
+    ('18-stair-down',   (22.7, -4.0, 30.0), (22.7, -8.0, 34), 74),
+    ('11-living2',      (29.0, 5.6, 38.5), (27, 4.4, 26), 74),
+    ('12-fireplace',    (26.5, 5.4, 31.5), (34, 4.0, 31.5), 74),
+    ('13-nook',         (19.5, 5.4, 39.5), (14, 4.2, 30), 74),
+    ('14-ens',          (9.5, 5.4, 22.5),  (1.5, 3.6, 21), 74),
+    ('15-laundry',      (30.0, 5.4, 15.5), (29, 4.6, 10), 74),
+    ('16-powder',       (15.8, 5.2, 4.6),  (12, 4.4, 2), 74),
     ('01-aerial-sw',     (-42, 52, 78),   (17, 2, 24), 62),
     ('02-aerial-se',     (66, 46, 66),    (16, 2, 22), 62),
     ('03-aerial-n',      (24, 44, -46),   (18, 2, 22), 62),
@@ -149,12 +173,24 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     meshes = load(BIN)
     tris = build_tris(meshes)
+    lights = None
+    lp = os.path.join(HERE, 'scene.lights.json')
+    if os.path.exists(lp):
+        import json
+        lights = json.load(open(lp))
+        print(f"{len(lights)} point lights loaded")
     print(f"{len(meshes)} meshes, {len(tris)} triangles")
     only = sys.argv[1:] if len(sys.argv) > 1 else None
     for name, eye, tgt, fov in VIEWS:
         if only and not any(o in name for o in only):
             continue
-        img = render(tris, eye, tgt, 1000, 640, fov)
+        night = name.startswith('19') or name.startswith('20')
+        img = render(tris, eye, tgt, 1000, 640, fov,
+                     ambient=0.10 if night else 0.56, sky=0.05 if night else 0.22,
+                     sunmul=0.08 if night else 1.0,
+                     lights=lights if night else None,
+                     bg=((0.05, 0.06, 0.10), (0.07, 0.07, 0.09)) if night else
+                        ((0.55, 0.68, 0.82), (0.86, 0.87, 0.84)))
         p = os.path.join(OUT, name + '.jpg')
         img.save(p, quality=88)
         print('  wrote', p)

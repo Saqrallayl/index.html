@@ -70,6 +70,7 @@ scene.environment = envRT.texture;
 
 /* ---------------------------------------------------------------- lights -- */
 const hemi = new THREE.HemisphereLight(0xcfe2ff, 0xa4937c, 0.9);
+const ambient = new THREE.AmbientLight(0xffffff, 0.14);
 scene.add(hemi);
 const sun = new THREE.DirectionalLight(0xfff0d8, 2.7);
 const SUN_DIR = new THREE.Vector3(-0.30, 0.42, 0.86).normalize();
@@ -83,7 +84,7 @@ const sc = sun.shadow.camera;
 sc.left = -62; sc.right = 62; sc.top = 62; sc.bottom = -62; sc.near = 40; sc.far = 320;
 sun.shadow.bias = -0.0006;
 sun.shadow.normalBias = 0.03;
-scene.add(new THREE.AmbientLight(0xffffff, 0.14));
+scene.add(ambient);
 // bounce light so ceilings and soffits read warm instead of black
 const bounce = new THREE.DirectionalLight(0xffe9cf, 0.42);
 bounce.position.set(0, -1, 0.2);
@@ -102,9 +103,9 @@ const buildMs = Math.round(performance.now() - t0);
 // interior point lights (kept off during the day)
 const interior = [];
 for (const L of furn.lights) {
-  const p = new THREE.PointLight(L.color, 0, L.dist || 18, 2);
+  const p = new THREE.PointLight(L.color, 0, L.dist || 18, 1.7);
   p.position.set(L.pos[0], L.pos[1], L.pos[2]);
-  p.userData.base = L.intensity * 26;
+  p.userData.base = L.intensity * 170;
   scene.add(p);
   interior.push(p);
 }
@@ -152,11 +153,19 @@ function drawMinimapBase() {
   return { canvas: c, P, S, x0, z0 };
 }
 
-const mm = new THREE.Vector2();
-function drawMinimap() {
+function initMinimap() {
   const c = hud.minimap;
   if (!c) return;
-  if (!c.width) { const b = drawMinimapBase(); hud.base = b; c.width = b.canvas.width; c.height = b.canvas.height; hud.ctx = c.getContext('2d'); }
+  const b = drawMinimapBase();
+  hud.base = b;
+  c.width = b.canvas.width;
+  c.height = b.canvas.height;
+  hud.ctx = c.getContext('2d');
+  c.style.width = Math.round(c.width / 2) + 'px';
+}
+function drawMinimap() {
+  const c = hud.minimap;
+  if (!c || !hud.ctx) return;
   const g = hud.ctx, b = hud.base;
   g.clearRect(0, 0, c.width, c.height);
   g.drawImage(b.canvas, 0, 0);
@@ -178,9 +187,10 @@ function setMode(mode) {
   state.mode = mode;
   const day = mode === 'day';
   skyMat.uniforms.night.value = day ? 0 : 1;
-  hemi.intensity = day ? 0.85 : 0.14;
-  hemi.color.set(day ? 0xbdd9ff : 0x35415c);
-  sun.intensity = day ? 2.7 : 0.25;
+  hemi.intensity = day ? 0.9 : 0.3;
+  hemi.color.set(day ? 0xcfe2ff : 0x3d4a66);
+  ambient.intensity = day ? 0.14 : 0.09;
+  sun.intensity = day ? 2.7 : 0.22;
   sun.color.set(day ? 0xfff0d8 : 0xffd0a0);
   renderer.toneMappingExposure = day ? 1.02 : 1.25;
   for (const p of interior) p.intensity = day ? 0 : p.userData.base;
@@ -200,6 +210,24 @@ function lockPointer() {
   if (document.pointerLockElement !== canvas) canvas.requestPointerLock();
 }
 canvas.addEventListener('click', lockPointer);
+document.addEventListener('pointerlockchange', () => {
+  const locked = document.pointerLockElement === canvas;
+  document.body.dataset.locked = locked ? '1' : '0';
+  if (!locked) toast('Click anywhere to look around again');
+});
+function toggleFurnished() {
+  const f = scene.getObjectByName('furniture');
+  if (!f) return;
+  f.visible = !f.visible;
+  document.body.dataset.furnished = f.visible ? '1' : '0';
+  $('#furn-btn').classList.toggle('on', !f.visible);
+  toast(f.visible ? 'Furnished' : 'Empty shell — just the architecture');
+}
+$('#furn-btn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  toggleFurnished();
+});
+window.__toggleFurnished = toggleFurnished;
 $('#roof-btn').addEventListener('click', (e) => { e.stopPropagation(); toggleRoofs(!state.roofs); toast(state.roofs ? 'Roof on' : 'Roof off — look down into the plan'); });
 $('#plan-btn').addEventListener('click', (e) => { e.stopPropagation(); $('#planov').classList.toggle('on'); });
 $('#reset-btn').addEventListener('click', (e) => { e.stopPropagation(); player.goto(23.0, 20.4, Math.PI); toast('Back to the top of the stairs'); });
@@ -219,6 +247,7 @@ addEventListener('keydown', (e) => {
   if (k === 'f') { player.fly = !player.fly; toast(player.fly ? 'Fly mode on — E up / Q down' : 'Walking'); }
   if (k === 'r') { player.goto(21.5, 21.0, Math.PI); toast('Back to the top of the stairs'); }
   if (k === 'm') { hud.minimap.classList.toggle('hidden'); }
+  if (k === 'g') { $('#furn-btn').dispatchEvent(new MouseEvent('click')); }
   if (k === 'p') { $('#planov').classList.toggle('on'); }
   if (k === 'h') { $('#help').classList.toggle('hidden'); }
   if (k === 'n') { setMode(state.mode === 'day' ? 'dusk' : 'day'); }
@@ -337,6 +366,7 @@ function frame(now) {
 }
 
 /* ------------------------------------------------------------------ boot -- */
+initMinimap();
 setMode('day');
 player.goto(23.6, 21.2, Math.PI + 0.35);
 player.update(0.016, camera);

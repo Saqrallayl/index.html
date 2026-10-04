@@ -26,6 +26,7 @@
   <button data-mode-btn="day" title="Daylight (N toggles)">Day</button>
   <button data-mode-btn="dusk" title="Evening with interior lights on">Evening</button>
   <button id="roof-btn" title="Toggle roof">Roof</button>
+  <button id="furn-btn" title="Show / hide the furniture">Furnished</button>
   <button id="plan-btn" title="Floor plan (P)">Plan</button>
   <button id="reset-btn" title="Back to the stairs (R)">Reset</button>
   <a href="site.html" title="The Elsewhere travel page">Site ↗</a>
@@ -47,13 +48,16 @@
     <h1>Your plan, <em>walkable.</em></h1>
     <p class="lead">A realistic 3D build of the layout you described: open living, dining and kitchen,
       master suite with ensuite + walk-in closet, laundry, powder room, and the covered patio
-      and balcony outside.</p>
+      and balcony outside. Walk it, open the roof to see the plan in place, or strip the
+      furniture back to the bare architecture.</p>
     <div class="jumps-label">Start somewhere</div>
     <div id="jumps"></div>
     <button id="start-go">Start walking <span>→</span></button>
     <div class="keys">
-      <span><b>W A S D</b> move</span><span><b>Mouse</b> look</span><span><b>Shift</b> run</span>
-      <span><b>F</b> fly mode</span><span><b>N</b> evening lights</span><span><b>P</b> floor plan</span>
+      <span><b>W A S D</b> / arrows move</span><span><b>Mouse</b> look</span><span><b>Shift</b> run</span>
+      <span><b>F</b> fly mode <i>(E / Q up-down)</i></span><span><b>Scroll</b> eye height</span>
+      <span><b>N</b> evening lights</span><span><b>P</b> floor plan</span><span><b>H</b> hide this bar</span>
+      <span><b>G</b> furnished / empty shell</span><span><b>Bottom-left</b> roof + other toggles</span>
     </div>
     <div id="boot" class="muted"></div>
   </div>

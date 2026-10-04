@@ -122,10 +122,9 @@ export class Player {
       this.pos.y += this.vel.y * dt;
       this.eyeY = this.pos.y + this.eye;
     } else {
-      this.vel.x += (wish.x - this.vel.x) * Math.min(1, ACC * dt);
-      this.vel.z += (wish.z - this.vel.z) * Math.min(1, ACC * dt);
-      this.vel.x *= Math.max(0, 1 - DAMP * dt * 0.06);
-      this.vel.z *= Math.max(0, 1 - DAMP * dt * 0.06);
+      const rate = Math.min(1, (wish.lengthSq() > 0 ? ACC : DAMP) * dt);
+      this.vel.x += (wish.x - this.vel.x) * rate;
+      this.vel.z += (wish.z - this.vel.z) * rate;
       this.move(this.vel.x * dt, this.vel.z * dt);
       const g = this.groundAt(this.pos.x, this.pos.z);
       this.pos.y += (g - this.pos.y) * Math.min(1, 12 * dt);
@@ -143,9 +142,23 @@ export class Player {
     cam.rotation.set(this.pitch, this.yaw, 0, 'YXZ');
   }
 
-  /** circle vs AABB resolution, a few relaxation passes */
+  /** step down no more than this without a deliberate move: keeps you off
+      ledges (void, stair slot, balcony edge) instead of walking into thin air */
+  static get STEP_DOWN() { return 2.6; }
+
   move(dx, dz) {
-    this.pos.x += dx; this.pos.z += dz;
+    if (this.fly) { this.pos.x += dx; this.pos.z += dz; return; }
+    const limit = this.pos.y - Player.STEP_DOWN;
+    const nx = this.pos.x + dx, nz = this.pos.z + dz;
+    if (this.groundAt(nx, nz) >= limit) { this.pos.x = nx; this.pos.z = nz; }
+    else if (this.groundAt(nx, this.pos.z) >= limit) { this.pos.x = nx; this.vel.z *= 0.0; }
+    else if (this.groundAt(this.pos.x, nz) >= limit) { this.pos.z = nz; this.vel.x *= 0.0; }
+    else { this.vel.x = 0; this.vel.z = 0; return; }
+    this.resolve();
+  }
+
+  /** circle vs axis-aligned boxes, a few relaxation passes */
+  resolve() {
     for (let pass = 0; pass < 3; pass++) {
       let hit = false;
       const near = this.nearby(this.pos.x, this.pos.z, RADIUS + 0.2);

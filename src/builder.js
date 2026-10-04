@@ -411,25 +411,38 @@ export function buildArchitecture(plan, M, scene) {
       B.box(0.3, 0.16, len + 0.1, cx, base + 0.08, cz, M.blackMatte);
     }
     push(cx - (horiz ? len / 2 : 0.25), cz - (horiz ? 0.25 : len / 2),
-      cx + (horiz ? len / 2 : 0.25), cz + (horiz ? 0.25 : len / 2), RAIL_H);
+      cx + (horiz ? len / 2 : 0.25), cz + (horiz ? 0.25 : len / 2), r.solid ? 999 : RAIL_H);
   }
 
   /* -------------------------------------------------------------- stair --- */
   const S = plan.stair, H = plan.void;
   const rise = 10 / S.risers, tread = S.tread;
+  const w = S.x1 - S.x0;
   for (let i = 0; i < S.risers - 1; i++) {
     const y = -rise * (i + 1);
     const z = S.z_top + tread * i;
-    B.box(S.x1 - S.x0 - 0.1, 0.42, tread, (S.x0 + S.x1) / 2, y - 0.21, z + tread / 2, M.woodFloor);
-    // riser face
-    B.box(S.x1 - S.x0 - 0.1, rise, 0.08, (S.x0 + S.x1) / 2, y + rise / 2, z + 0.04, M.trim);
-    // glass guard each side, following the flight
-    for (const [gx, side] of [[S.x0 + 0.09, -1], [S.x1 - 0.09, 1]]) {
-      glassB.box(0.05, 3.0, tread - 0.05, gx, y + 1.5, z + tread / 2, M.glassRail);
-      B.box(0.14, 0.12, tread, gx, y + 3.05, z + tread / 2, M.blackMatte);
+    // oak tread over a slim white riser: an open, modern flight
+    B.box(w - 0.08, 0.34, tread + 0.11, (S.x0 + S.x1) / 2, y + 0.02, z + tread / 2, M.woodFloor);
+    B.box(w - 0.08, rise - 0.3, 0.07, (S.x0 + S.x1) / 2, y + rise / 2 - 0.13, z + 0.055, M.trim);
+    // glass guard following the flight, with a handrail cap
+    for (const gx of [S.x0 + 0.08, S.x1 - 0.08]) {
+      glassB.box(0.05, 2.9, tread - 0.04, gx, y + 1.55, z + tread / 2, M.glassRail);
+      B.box(0.13, 0.11, tread + 0.06, gx, y + 3.05, z + tread / 2, M.blackMatte);
     }
   }
-  // first floor landing pad at the foot of the stair
+  // stringers, so the flight reads as built rather than floating
+  for (const sx of [S.x0 + 0.1, S.x1 - 0.1]) {
+    for (let i = 0; i < S.risers - 1; i++) {
+      const y = -rise * (i + 1);
+      const z = S.z_top + tread * i;
+      B.box(0.14, 0.5, tread + 0.06, sx, y - 0.22, z + tread / 2, M.cabLight);
+    }
+  }
+  // newel posts at the top
+  for (const sx of [S.x0 + 0.08, S.x1 - 0.08]) {
+    B.box(0.3, 3.4, 0.3, sx, 1.6, S.z_top - 0.12, M.blackMatte);
+  }
+  // first floor landing pad at the foot of the flight
   B.floor(S.x1 - S.x0, 3.2, (S.x0 + S.x1) / 2, LOW + 0.03, S.z_top + tread * (S.risers - 1) + 1.6, M.tileFloor, 4, false);
 
   /* ----------------------------------------------------- roofs + posts --- */
