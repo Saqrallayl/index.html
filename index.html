@@ -1,15 +1,68 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Elsewhere — Get a little lost.</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"></head>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Your plan, walkable — Elsewhere</title>
+<link rel="stylesheet" href="walkthrough.css">
+</head>
 <body>
-<header><a class="logo" href="#">elsewhere<span>✳</span></a><nav><a href="#places">The good places</a><a href="#philosophy">Our kind of travel</a></nav><button class="small-button surprise">Find my somewhere <span>↗</span></button></header>
-<main><section class="hero"><div class="hero-copy"><div class="eyebrow"><span class="dot"></span> LESS SCROLLING. MORE WANDERING.</div><h1>Get a little<br><em>lost.</em> <span class="sun">✳</span><br>Find a lot.</h1><p>For the places you didn’t know you needed.<br>The plans you didn’t make. The stories you’ll keep.</p><button class="primary surprise">Take me somewhere <span>↗</span></button><div class="hero-note"><span>↳</span> Good things happen off the beaten path.</div></div>
-<div class="hero-art"><div class="photo-wrap"><img class="hero-img" src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=1300&q=85" alt="Colorful Italian village overlooking the turquoise Mediterranean"><div class="photo-shade"></div><div class="photo-caption"><span>44°07′ N 9°42′ E</span><strong>Somewhere in Cinque Terre, Italy</strong><span>And a world away from your inbox.</span></div><div class="image-index">01 / 05</div></div><div class="sticker">OUT OF OFFICE<br><b>in spirit.</b><span>☀</span></div><div class="little-label">a change of scenery looks good on you.</div><svg class="doodle" width="115" height="90" viewBox="0 0 115 90"><path d="M8 8C90 0 18 70 70 50C102 36 73 16 66 30S66 74 107 72M94 60l14 13-18 9" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></div></section>
-<div class="ticker"><div>GO WHERE YOU FEEL ALIVE <span>✳</span> TAKE THE SCENIC ROUTE <span>✳</span> COLLECT MOMENTS, NOT MILES <span>✳</span> A LITTLE FURTHER FROM ORDINARY <span>✳</span> GO WHERE YOU FEEL ALIVE <span>✳</span></div></div>
-<section class="destinations" id="places"><div class="section-heading"><div><div class="eyebrow">YOUR NEXT “I NEEDED THIS.”</div><h2>What’s your kind of <em>away?</em></h2></div><p>No wrong turns. Just really good places.</p></div><div class="filter-row"><div class="filters"><button class="active" data-filter="all">✳ A bit of everything</button><button data-filter="coast">☀ Salt in your hair</button><button data-filter="nature">♧ Into the wild</button><button data-filter="city">▦ City daydreams</button><button data-filter="slow">☕ The slow life</button></div><span class="place-count">4 places, endless possibilities ↘</span></div>
-<div class="cards">
-<article class="card" data-category="coast" data-name="The art of doing nothing" data-location="Amalfi Coast, Italy" data-description="Follow the lemon trees to quiet swimming coves, long lunches, and a sun-warmed terrace. Your only appointment? The sunset." data-image="https://images.unsplash.com/photo-1612698093158-e07eedd24dbe?auto=format&fit=crop&w=900&q=85"><div class="card-photo"><img src="https://images.unsplash.com/photo-1612698093158-e07eedd24dbe?auto=format&fit=crop&w=900&q=85" alt="Pastel coastal houses in the Amalfi Coast" loading="lazy"><span class="tag">THE SWEET LIFE</span><button class="save" aria-label="Save Amalfi Coast" aria-pressed="false">♡</button><span class="duration">5–7 dreamy days</span></div><div class="card-location">ITALY · 40.63° N, 14.60° E</div><button class="card-title">The art of doing nothing <span>↗</span></button><p>Amalfi Coast, Italy</p></article>
-<article class="card" data-category="nature" data-name="A little closer to wild" data-location="The Dolomites, Italy" data-description="Trade your notifications for mountain air. Walk beneath soaring peaks, pause by impossibly blue lakes, and sleep under a sky full of stars." data-image="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=85"><div class="card-photo"><img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=85" alt="Dramatic green mountains and rocky peaks" loading="lazy"><span class="tag green">FRESH AIR, FULL HEART</span><button class="save" aria-label="Save the Dolomites" aria-pressed="false">♡</button><span class="duration">4–6 wide-open days</span></div><div class="card-location">ITALY · 46.50° N, 11.85° E</div><button class="card-title">A little closer to wild <span>↗</span></button><p>The Dolomites, Italy</p></article>
-<article class="card" data-category="city" data-name="Take the long way home" data-location="Lisbon, Portugal" data-description="Get happily turned around in tiled alleyways. Follow the yellow tram, find your favorite pastel de nata, and let live music lead you into the evening." data-image="https://images.unsplash.com/photo-1555881400-74d7acaacd8b?auto=format&fit=crop&w=900&q=85"><div class="card-photo"><img src="https://images.unsplash.com/photo-1555881400-74d7acaacd8b?auto=format&fit=crop&w=900&q=85" alt="Sunlit Lisbon streets with colorful traditional architecture" loading="lazy"><span class="tag pink">HAPPILY LOST</span><button class="save" aria-label="Save Lisbon" aria-pressed="false">♡</button><span class="duration">3–5 colorful days</span></div><div class="card-location">PORTUGAL · 38.72° N, 9.14° W</div><button class="card-title">Take the long way home <span>↗</span></button><p>Lisbon, Portugal</p></article>
-<article class="card" data-category="slow" data-name="Life in the slow lane" data-location="Ubud, Bali" data-description="Wake up to green as far as you can see. Wander the rice terraces, sip coffee in a garden, and leave plenty of room in the day for absolutely nothing." data-image="https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=900&q=85"><div class="card-photo"><img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=900&q=85" alt="Lush tropical landscape and peaceful Balinese architecture" loading="lazy"><span class="tag lilac">NO RUSH, REALLY</span><button class="save" aria-label="Save Ubud" aria-pressed="false">♡</button><span class="duration">7–10 unhurried days</span></div><div class="card-location">INDONESIA · 8.51° S, 115.26° E</div><button class="card-title">Life in the slow lane <span>↗</span></button><p>Ubud, Bali</p></article>
-</div></section><section class="manifesto" id="philosophy"><span class="manifesto-star">✳</span><div><div class="eyebrow">A DIFFERENT DIRECTION</div><h2>The best things in life<br>aren’t on your itinerary.</h2><p>We believe in taking your time. Turning left just because.<br>And finding a little more of yourself somewhere new.</p></div><button class="primary surprise">Let’s get a little lost ↗</button></section></main>
-<footer><a href="#" class="logo">elsewhere<span>✳</span></a><span>A little further from ordinary.</span><span>Made for the wanderers. © 2026</span></footer><dialog id="destination-dialog"><button class="close" aria-label="Close destination">✕</button><img id="modal-image" alt=""><div class="modal-content"><div class="eyebrow">YOUR SOMEWHERE IS CALLING</div><h2 id="modal-title"></h2><strong id="modal-location"></strong><p id="modal-description"></p><button class="primary" id="modal-save">♡ Save this daydream</button><button class="another">Surprise me again ↗</button></div></dialog><div class="toast" role="status"></div><script src="app.js"></script></body></html>
+<canvas id="app"></canvas>
+<div id="crosshair" aria-hidden="true"></div>
+
+<div id="hud">
+  <div class="panel left">
+    <div class="brand">elsewhere<span>✳</span> <em>upper floor</em></div>
+    <div id="room">—</div>
+    <div id="coords" class="muted">—</div>
+  </div>
+  <div class="panel right">
+    <div id="compass">N 0°</div>
+    <div id="fps" class="muted">—</div>
+  </div>
+</div>
+
+<div id="tools">
+  <button data-mode-btn="day" title="Daylight (N toggles)">Day</button>
+  <button data-mode-btn="dusk" title="Evening with interior lights on">Evening</button>
+  <button id="roof-btn" title="Toggle roof">Roof</button>
+  <button id="furn-btn" title="Show / hide the furniture">Furnished</button>
+  <button id="plan-btn" title="Floor plan (P)">Plan</button>
+  <button id="reset-btn" title="Back to the stairs (R)">Reset</button>
+  <a href="site.html" title="The Elsewhere travel page">Site ↗</a>
+</div>
+
+<canvas id="minimap" width="200" height="260"></canvas>
+
+<div id="help">
+  <b>Move</b> WASD / arrows · <b>Look</b> mouse · <b>Run</b> Shift · <b>Fly</b> F (E/Q up-down)
+  · <b>Eye height</b> scroll · <b>Evening</b> N · <b>Plan</b> P · <b>Hide this</b> H
+</div>
+
+<div id="planov"><img src="assets/plan.png" alt="Upper floor plan"><button id="plan-close" aria-label="Close">✕</button></div>
+<div id="toast" role="status"></div>
+
+<div id="start">
+  <div class="card">
+    <div class="eyebrow">UPPER FLOOR · 1,314 SQ FT · 2 BED · 2½ BATH</div>
+    <h1>Your plan, <em>walkable.</em></h1>
+    <p class="lead">A realistic 3D build of the layout you described: open living, dining and kitchen,
+      master suite with ensuite + walk-in closet, laundry, powder room, and the covered patio
+      and balcony outside. Walk it, open the roof to see the plan in place, or strip the
+      furniture back to the bare architecture.</p>
+    <div class="jumps-label">Start somewhere</div>
+    <div id="jumps"></div>
+    <button id="start-go">Start walking <span>→</span></button>
+    <div class="keys">
+      <span><b>W A S D</b> / arrows move</span><span><b>Mouse</b> look</span><span><b>Shift</b> run</span>
+      <span><b>F</b> fly mode <i>(E / Q up-down)</i></span><span><b>Scroll</b> eye height</span>
+      <span><b>N</b> evening lights</span><span><b>P</b> floor plan</span><span><b>H</b> hide this bar</span>
+      <span><b>G</b> furnished / empty shell</span><span><b>Bottom-left</b> roof + other toggles</span>
+    </div>
+    <div id="boot" class="muted"></div>
+  </div>
+</div>
+
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
